@@ -23,7 +23,7 @@ public class KafkaManager {
 	@Autowired
 	AceMigService aceMigService;
 
-	@KafkaListener(topics = "migForCust", groupId = "group_id_1", containerFactory = "KafkaListnerContainerFactory")
+	@KafkaListener(topics = "migForCust", groupId = "group_id_1")
 	public void readFromKafkaQueue(@Payload AceMigMaster message, @Header(KafkaHeaders.RECEIVED_KEY) String key) {
 		logger.info("Received message with key: {} and value: {}", key, message);
 

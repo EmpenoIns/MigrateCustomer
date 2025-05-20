@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.concurrency.ThreadManager;
 import com.example.demo.entity.AceMigMaster;
 import com.example.demo.repo.AceMigMasterRepository;
 import com.example.demo.service.AceMigService;
@@ -57,10 +58,19 @@ public class AceMigServiceImpl implements AceMigService {
 		}
 		return builder.toString();
 	}
-	
-	
-	
-	
-	
 
+	@Override
+	public void processEligibleCustomers() {
+		List<AceMigMaster> eligible = aceMigMasterRepository.findByProcIndicator("IN");
+		
+		ThreadManager threadManager = new ThreadManager();
+		for(AceMigMaster ace : eligible) {
+			threadManager.proceesMessage(eligible, ace, aceMigMasterRepository);
+		}
+		threadManager.shutdown();
+		logger.info("Proccesing of eligible customers completed.");
+		
+		
+		
+	}
 }
